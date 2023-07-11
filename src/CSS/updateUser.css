@@ -1,0 +1,35 @@
+.update-form-container {
+    display: flex;
+    align-items: center;
+  }
+  .update-form{
+    display: flex;
+    width: 200px;
+    max-width: 500px
+  }
+  .update-form input{
+    padding: 10px;
+    width: 75%;
+  }
+  
+  .update-button{
+    height: 100%;
+    border-radius: 5px;
+    border: 1px solid black;
+    outline: none !important;
+    font-size: 1rem;
+    font-weight: bold;
+    background: white;
+    color: black;
+    cursor: pointer;
+    transition: 0.3s linear;
+  }
+  
+  .update-button:hover {
+    background: black;
+    color: white;
+  }
+
+  .update-form-btn-container{
+    text-overflow: wrap;
+  }

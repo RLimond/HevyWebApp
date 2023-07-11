@@ -1,0 +1,27 @@
+/*App.css has to set
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+*/
+/*
+setting margin-top:auto; pushes footer to bottom of page at all times
+*/
+.my-footer{
+    margin-top: auto;
+    width: 100dvw;
+    width: 100vw;
+}
+.my-footer .container{
+    margin-top: auto;
+    height: 50px;
+    padding-bottom:10px;
+    padding-right: 10%;
+    background-color: rgba(var(--bs-dark-rgb),var(--bs-bg-opacity))!important;
+}
+.my-footer span{
+    padding-top: 10px;
+}
+.my-footer .footer-icon{
+    padding-top: 15px;
+    font-size: 1em;
+}

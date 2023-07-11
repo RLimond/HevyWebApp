@@ -1,0 +1,94 @@
+.workoutsContainer{
+    -ms-overflow-style: none;  /* IE and Edge */
+    scrollbar-width: none;  /* Firefox */
+    width: 100%;
+    overflow: auto;
+    height: 700px;
+}
+
+/*Hide scrollbar for Chrome, Safari, and Opera*/
+.workoutsContainer::-webkit-scrollbar{
+    display: none;
+}
+
+.columnContainer{
+    display: flex
+}
+
+@media (max-width: 1000px) {
+    .columnContainer {
+      display: block;
+    }
+    .workoutsContainer{
+        height: 600px;
+    }
+    .column{
+        height: 700px;
+        margin-bottom: 50px;
+    }
+    .column-background{
+        height: 700px;
+    }
+  }
+.column-background{
+    position: relative;
+    flex: 1;
+    padding: 20px;
+    border-left: 1px solid #7e7c7c;
+    border-bottom: 1px solid #7e7c7c;
+    background-position: center top -300px;
+    background-repeat: repeat;
+    background-size: cover;
+}
+.column{
+    flex: 1;
+    padding: 20px;
+    border-left: 1px solid #7e7c7c;
+    border-bottom: 1px solid #7e7c7c;
+}
+.view-more-button{
+    width: 100%;
+    border-radius: 15px;
+    border: 1px solid grey;
+    background-color: transparent;
+}
+.view-more-button:hover{
+    background-color: grey;
+    color: white;
+}
+
+.sticky-bottom{
+    position: absolute;
+    width: 100%;
+    bottom: 0;
+    left: 0;
+}
+.graph{
+    position: relative;
+    height: 300px;
+    text-align: center;
+}
+.graph-title{
+    font-size: 18px;
+    font-weight: 650;
+    margin-bottom: 0px;
+    
+}
+.graph-graph{
+    position: absolute;
+    width: 100%;
+    left: -30px;
+    padding-top: 5%;
+}
+.search-results{
+    margin: 0;
+    font-size: 20px;
+    font-weight: bold;
+    padding: 10px;
+    height: 48px;
+    cursor: pointer;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    min-width: 35px;
+}

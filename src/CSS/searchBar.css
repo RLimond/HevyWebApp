@@ -1,0 +1,15 @@
+.searchBar-form{
+    padding-left: 20px;
+}
+.searchBar-input{
+    font-size: 100%;
+    padding: 10px;
+    height: 48px;
+    cursor: pointer;
+    background-color: #ffffff;
+    border: 1px solid #ccc;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    width: 100%;
+}

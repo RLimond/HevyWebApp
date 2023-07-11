@@ -1,0 +1,22 @@
+.public-user-info-container{
+    display: flex;
+    height: 100px;
+    position: relative;
+    border: 1px solid #ccc;
+    align-items: center;
+}
+
+@media (max-width: 700px) {
+    .public-user-info-container{
+        width: 120%;
+    }
+    
+}
+
+@media (max-width: 500px) {
+    .public-user-info-container{
+        margin-left: -30%;
+        width: 160%;
+    }
+    
+}

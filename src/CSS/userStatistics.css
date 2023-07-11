@@ -1,0 +1,107 @@
+.user-statistics-grid{
+    display: grid;
+    height: 100%;
+    grid-template-columns: minmax(100px, 200) minmax(400px, 600px);
+    grid-template-rows: minmax(200px, 200px) minmax(200px, 200px);
+    border-left: 1px solid #ccc;
+    border-right: 1px solid #ccc;
+    border-top: 1px solid #ccc;
+    border-radius: 5px;
+}
+
+.user-statistics-grid-header{
+    grid-column-start: 1;
+    grid-column-end: 3;
+    display: flex;
+    border-bottom: 1px solid #ccc;
+}
+.user-statistics-img{
+    display: flex;
+    height: 100px;
+    width: 100px;
+    margin: 5px;
+}
+.user-statistics-img img{
+    border-radius: 50%;
+}
+.user-statistics-name{
+    width: 100%;
+    text-align: center;
+    margin-right: 100px;
+    margin-top: 15px;
+}
+.user-statistics-name h2{
+    color: #7e7b7b;
+    font-weight: lighter;
+}
+.user-statistics-name h1{
+    font-weight: bold;
+}
+.top-left{
+    border-bottom: 1px solid #ccc;
+}
+.row-half-height{
+    height: 50%;
+    padding-top: 15px;
+}
+.chosen-exercise{
+    border-left: 1px solid #ccc;
+    border-bottom: 1px solid #ccc;
+}
+.bottom-text{
+    font-size: 16px;
+    font-weight: 600;
+}
+.graph-container{
+    max-height: 300px;
+    position: relative;
+    grid-row-start: 3;
+    grid-row-end: 5; /* Absorb the div below */
+    text-align: center;
+}
+.graph-container-title{
+    font-size: 18px;
+    font-weight: 650;
+    margin-bottom: 0px;
+    
+}
+.graph-container-graph{
+    position: absolute;
+    width: 100%;
+    left: -30px;
+    padding-top: 5%;
+}
+.graph-container-graph-stretched{
+    position: absolute;
+    width: 130%;
+    left: -30px;
+    padding-top: 5%;
+}
+.prs-on-lift{
+    grid-row-start: 3;
+    grid-row-end: 5; /* Absorb the div below */
+    border: 1px solid #ccc;
+}
+.workout-box-columnContainer{
+    display: flex;
+    font-size: 16px;
+    font-weight: 600;
+}
+  .exercise-column{
+    text-align: center;
+    flex: 1;
+}
+.text-descriptor{
+  color:#686666;
+  font-weight:normal;
+  margin: 0;
+}
+.workout-box-columnContainer p{
+    margin: 0;
+}
+.span-bottom{
+    display: flex;
+    grid-column: 1/span 2; /*span bottom row*/
+    max-height: 300px;
+    text-align: center;
+}

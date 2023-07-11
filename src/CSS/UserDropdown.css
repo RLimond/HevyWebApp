@@ -1,0 +1,56 @@
+ /*Hide scrollbar for Chrome, Safari, and Opera*/
+.userDropdown-options::-webkit-scrollbar{
+  display: none;
+}
+ /* UserDropdown.css */
+.custom-userDropdown {
+  position: relative;
+  width: 100%;
+}
+
+.userDropdown-header {
+  font-size: 100%;
+  padding: 10px;
+  height: 48px;
+  cursor: pointer;
+  background-color: #ffffff;
+  border: 1px solid #ccc;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  min-width: 35px;
+}
+.userDropdown-header:hover {
+  background-color: lightgray;
+}
+
+.userDropdown-options {
+  position: absolute;
+  top: 100%;
+  left: 0;
+  width: 100%;
+  max-height: 200px;
+  overflow-y: auto;
+  background-color: #ffffff;
+  border: 1px solid #ccc;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+  z-index: 1;
+  min-width: 35px;
+  /*Hide scrollbar*/
+  -ms-overflow-style: none;  /* IE and Edge */
+  scrollbar-width: none;  /* Firefox */
+}
+
+.userDropdown-option {
+  padding: 10px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+.userDropdown-option:hover {
+  background-color: lightgray;
+}
+
+.userDropdown-option.selected {
+  font-weight: bold;
+}

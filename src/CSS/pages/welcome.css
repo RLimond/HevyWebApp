@@ -1,0 +1,53 @@
+.welcome{
+    
+}
+.welcome-header h1{
+    font-weight: bold;
+    font-size: 50px;
+}
+.site-info{
+    font-family: 'Lato', sans-serif;
+    display: grid;
+    grid-template-columns: minmax(200px, 800px) minmax(200px, 350px);
+    gap: 30px;
+    justify-content: center;
+}
+
+.box{
+    margin-top: 25px;
+    background-color: white;
+    border-radius: 8px;
+    border: 1px solid rgb(231, 228, 228);
+    padding: 15px;
+}
+.box-sm{
+    margin-top: 25px;
+    background-color: white;
+    border-radius: 8px;
+    border: 1px solid rgb(231, 228, 228);
+    padding: 15px;
+}
+.box-md{
+    grid-column: 1 / span 2; /* Span two columns starting from the first column */
+    margin-top: 25px;
+    background-color: white;
+    border-radius: 8px;
+    border: 1px solid rgb(231, 228, 228);
+    padding: 15px;
+}
+.box h3, .box-sm h3, .box-md h3{
+    text-align: center;
+    border-bottom: 1px solid rgb(231, 228, 228);
+}
+
+.box p, .box-sm p, .box-md p{
+    color: #413f3f;
+    font-weight: 300;
+    font-size: 18px;
+}
+
+@media (max-width: 600px) {
+    .site-info{
+       display: unset;
+    }
+  }

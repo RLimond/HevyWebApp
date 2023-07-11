@@ -1,0 +1,27 @@
+.exercise-list ul {
+    list-style: none;
+    padding: 0;
+  }
+  
+  .exercise-list li {
+    background-color: #f0f0f0;
+    margin-bottom: 10px;
+    padding: 10px;
+  }
+  
+  .exercise-list li.highlighted {
+    background-color: #e0e0e0;
+  }
+  
+  .exercise-box {
+    display: flex;
+    justify-content: space-between;
+  }
+  
+  .exercise-name {
+    font-weight: bold;
+  }
+  
+  .exercise-count {
+    font-style: italic;
+  }

@@ -1,0 +1,93 @@
+.WorkoutBox {
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    padding: 20px;
+    margin-bottom: 20px;
+  }
+  
+  .WorkoutBox h2 {
+    font-size: 24px;
+    margin-bottom: 10px;
+  }
+  
+  .WorkoutBox p {
+    margin: 0;
+  }
+  
+  .Exercise {
+    margin-bottom: 10px;
+  }
+  
+  .Exercise p {
+    margin: 0;
+    font-size: 18px;
+  }
+  
+  .Exercise button {
+    font-size: 14px;
+    background-color: transparent;
+    color: #333;
+    border: 1px solid #ccc;
+    padding: 5px 10px;
+    cursor: pointer;
+    border: none;
+    transform: rotate(-90deg);
+  }
+  .rotate-button {
+    transition: transform 0.3s ease-in-out;
+  }
+  
+  .rotate-button.open {
+    transform: rotate(90deg);
+  }
+.button-content{
+  
+  display: flex;
+}
+.downArrowpng{
+  margin: 7px;
+  width: 15px;
+  height: 15px;
+}
+  .Exercise ul {
+    margin: 0;
+    padding: 0;
+    list-style-type: none;
+  }
+  
+  .Exercise li {
+    font-size: 16px;
+    margin-bottom: 5px;
+  }
+  .Exercise_img{
+    width: 50px;
+    height: 50px;
+    margin-right: 15px;
+  }
+  .set-item.alternate{
+    background-color: rgb(243, 244, 246);
+  }
+  .set-number{
+    width: 35px;
+    padding-left: 12px;
+    margin-right: 50px;
+    border: 1px solid rgb(177, 178, 180);
+    border-radius: 4px;
+    background-color: white;
+    display: inline-block;
+    align-items: center;
+    justify-content: center;
+    font-weight: bold;
+  }
+  .workout-box-columnContainer{
+    display: flex;
+    font-size: 16px;
+    font-weight: 600;
+}
+  .workout-box-column{
+    flex: 1;
+}
+.text-descriptor{
+  color:#9c9a9a;
+  font-weight:normal
+}

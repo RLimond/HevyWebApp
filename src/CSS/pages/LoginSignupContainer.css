@@ -1,0 +1,71 @@
+.login-signup-container {
+    display: grid;
+    grid-template-columns: 70% 30% 70%;
+    width: 60%;
+    height: 475px;
+    background-color: #f5f5f5;
+    padding: 0px;
+    margin-top: 100px;
+    margin-left: auto;
+    margin-right: auto;
+    border: 1px solid black;
+    overflow: hidden;
+    transition: 0.1s linear;
+  }
+  @media (max-width: 768px) {
+    .login-signup-container {
+      width: 80%; /* Change the width for smaller screens */
+    }
+  }
+  .login-signup-container.active {
+    grid-template-columns: 0% 30% 70%;
+    transition: 0.1s linear;
+  }
+  
+  .login-signup-container .side-div {
+    height: 100%;
+    width: 100%;
+    display: flex;
+    align-items: center;
+    background: linear-gradient(rgba(0, 0, 0, 0.2), rgba(0, 0, 0, 0.2)),
+      url(https://media.istockphoto.com/id/837981886/photo/rows-of-dumbbells-in-the-gym-with-sunlight.jpg?s=2048x2048&w=is&k=20&c=r3MBgh_Q1v3cgCyfb_dYtzVCouvyL62rec0pKI0qFQg=);
+    background-size: cover;
+    background-position: center;
+    justify-content: center;
+  }
+  
+  .login-signup-container .side-div button {
+    padding: 10px 20px;
+    background-color: black;
+    color: white;
+    border: 1px solid black;
+    cursor: pointer;
+    font-size: 0.99rem;
+    transition: 0.3s linear;
+  }
+  
+  .login-signup-container .side-div button:hover {
+    background-color: rgb(49, 48, 48);
+    border: 1px solid rgb(49, 48, 48);
+  }
+
+.spinner {
+    background: transparent
+    url("https://media.giphy.com/media/8agqybiK5LW8qrG3vJ/giphy.gif") center
+    no-repeat;
+    width: 64px;
+    height: 64px;
+    border: 8px solid;
+    border-color: #3d5af1 transparent #3d5af1 transparent;
+    border-radius: 50%;
+    animation: spin-anim 1.2s linear infinite;
+}
+
+@keyframes spin-anim {
+    0% {
+        transform: rotate(0deg);
+    }
+    100% {
+        transform: rotate(360deg);
+    }
+}
