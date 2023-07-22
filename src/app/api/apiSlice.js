@@ -4,6 +4,7 @@ import { setCredentials, logOut } from '../../features/auth/authSlice'
 // @desc defines default query url for application and sets up headers with authentication token
 export const baseQuery = fetchBaseQuery({
     baseUrl: 'https://hevy-webapp-api.onrender.com', //Change for production
+    //baseUrl: 'http://localhost:5000',
     credentials: 'include', // Change to include when hosting server or same-origin for local testing
     prepareHeaders: (headers, { getState }) => {
         const token = getState().auth.token

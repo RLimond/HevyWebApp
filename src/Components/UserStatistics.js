@@ -2,47 +2,55 @@ import React, { useEffect, useState } from "react";
 import ReChartsBarGraph from "./ReChartsBarGraph.js";
 import DefaultExerciseImg from '../Images/defaultExercise.svg'
 import { baseQueryWithReauth } from "../app/api/apiSlice.js"
+import { useQuery } from "@tanstack/react-query"
 import { store } from "../app/store.js"
 import '../CSS/userStatistics.css'
 export default function UserStatistics({graphData, selectedUsername, users, nth_workout}) {
     const [created_date, setCreatedDate] = useState(null);
     const [profile_pic, setProfilePic] = useState(DefaultExerciseImg);
-    const [favoriteExercise, setFavoriteExercise] = useState('');
-    const [favoriteExercisePrs, setFavoriteExercisePrs] = useState({
-        highestWeight: 0,
-        reps: 0,
-        oneRepMax: 0,
-      });
-    const [favoriteExerciseProgress, setFavoriteExerciseProgress] = useState(null)
+    const baseQueryOptions = {getState: store.getState, dispatch: store.dispatch}
     // api parameter for baseQueryWithReauth
     const formatDate = (dateString) => {
       const options = { month: 'short', day: 'numeric', year: 'numeric' };
       const formattedDate = new Date(dateString).toLocaleDateString('en-US', options);
       return formattedDate;
     };
+
+    async function getFavoriteExercise() {
+        if (selectedUsername !== '') {
+          const response = await baseQueryWithReauth(
+            `users/${selectedUsername}/exercises?query=getTopExercisesByWorkout&limit=10`,
+            baseQueryOptions,
+            {}
+          );
+          const favExercise = response.data;
+          const prRequest = await baseQueryWithReauth(
+            `users/${selectedUsername}/${favExercise[0]._id}?query=prs`,
+            baseQueryOptions,
+            {}
+          );
+          const prs = prRequest.data;
+          const progressRequest = await baseQueryWithReauth(`users/${selectedUsername}/${favExercise[0]._id}?query=weightProgress`, baseQueryOptions,{});
+          const progress = progressRequest.data
+          return [favExercise[0]._id, prs, progress];
+        }
+        return ["Loading","Loading",[]];
+      }
+      
+      const { data: userFavoriteExercise } = useQuery({
+        queryKey: ['userFavoriteExercise', selectedUsername],
+        queryFn: getFavoriteExercise,
+      });
+
     
     useEffect(() => {
       if (selectedUsername) {
-        const baseQueryOptions = {getState: store.getState, dispatch: store.dispatch}
         const fetchFavoriteWorkout = async () => {
           const user = users.find((user) => user.username === selectedUsername);
           if (user) {
             setCreatedDate(formatDate(user.created_at));
             setProfilePic(user.profile_pic || DefaultExerciseImg);
           }
-
-          const response = await baseQueryWithReauth(`users/${selectedUsername}/exercises?query=getTopExercisesByWorkout&limit=10`,baseQueryOptions,{});
-          const favExercise = response.data
-          setFavoriteExercise(favExercise[0]._id);
-
-          const prRequest = await baseQueryWithReauth(`users/${selectedUsername}/${favExercise[0]._id}?query=prs`, baseQueryOptions, {});
-          const prs = prRequest.data
-          if (prs ? prs : 0) // handles edge case where favourite exercise is body-weight (returns null), no prs to be had
-          setFavoriteExercisePrs(prs)
-
-          const progressRequest = await baseQueryWithReauth(`users/${selectedUsername}/${favExercise[0]._id}?query=weightProgress`, baseQueryOptions,{});
-          const progress = progressRequest.data
-          setFavoriteExerciseProgress(progress)
         };
         fetchFavoriteWorkout();
       }
@@ -78,18 +86,18 @@ export default function UserStatistics({graphData, selectedUsername, users, nth_
                     <div className="row-half-height">
                         <div style={{textAlign:'center'}}>
                             <p className='text-descriptor'>Favorite Exercise:</p>
-                            <p className="bottom-text">{favoriteExercise}</p>
+                            <p className="bottom-text">{userFavoriteExercise ? userFavoriteExercise[0]: "Loading"}</p>
                         </div>
                     </div>
                     <div style={{marginTop: '-15px'}} >
                         <div className='workout-box-columnContainer'>
                             <div className='exercise-column'>
                                 <p className='text-descriptor'>1RM:</p>
-                                <p>{favoriteExercisePrs.oneRepMax} Lb</p>
+                                <p>{userFavoriteExercise ? userFavoriteExercise[1].oneRepMax: "Loading"} Lb</p>
                             </div>
                             <div className='exercise-column'>
                                 <p className='text-descriptor'>Best Set:</p>
-                                <p>{favoriteExercisePrs.highestWeight} x {favoriteExercisePrs.reps}</p>
+                                <p>{userFavoriteExercise ? userFavoriteExercise[1].highestWeight: "Loading"} x {userFavoriteExercise ? userFavoriteExercise[1].reps: "Loading"}</p>
                             </div>
                         </div>
                     </div>
@@ -105,8 +113,8 @@ export default function UserStatistics({graphData, selectedUsername, users, nth_
                         <div className="graph-container-title"> Progress on Favorite (Weekly)</div>
                         <div className="graph-container-graph" style={{height:'300px'}}>
                             {
-                                favoriteExerciseProgress ? 
-                                <ReChartsBarGraph graphData={favoriteExerciseProgress} xKey={"weekStartDate"} yKey={"maxWeight"} color={"#2a8071"}/> 
+                                userFavoriteExercise ? 
+                                <ReChartsBarGraph graphData={userFavoriteExercise[2]} xKey={"weekStartDate"} yKey={"maxWeight"} color={"#2a8071"}/> 
                                 : <div></div>
                             }
                         </div>

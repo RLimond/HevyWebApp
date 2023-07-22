@@ -1,12 +1,13 @@
 //import logo from './logo.svg';
 import "bootstrap/dist/css/bootstrap.min.css";
 import './App.css';
+import "./CSS/footer.css"
+
+import {Route, Routes} from "react-router-dom"
+
 import BootStrapNav from "./Components/BootStrapNav";
 import Footer from "./Components/Footer";
 import FitnessPage from './Pages/FitnessPage';
-
-import "./CSS/footer.css"
-import {Route, Routes} from "react-router-dom"
 import Profile from "./Pages/Profile";
 import Welcome from "./Pages/Welcome";
 import RequireAuth from "./features/auth/RequireAuth";

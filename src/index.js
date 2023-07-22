@@ -10,15 +10,21 @@ import { store } from './app/store';
 import { Provider } from 'react-redux';
 
 import { disableReactDevTools } from '@fvilers/disable-react-devtools';
+import { ReactQueryDevtools } from '@tanstack/react-query-devtools'
+import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 
 if (process.env.NODE_ENV === 'production') disableReactDevTools()
 
+const queryClient = new QueryClient()
 const root = ReactDOM.createRoot(document.getElementById('root'));
 root.render(
   <React.StrictMode>
     <Provider store={store}>
       <BrowserRouter>
+      <QueryClientProvider client={queryClient}>
         <App />
+        {/*<ReactQueryDevtools/>*/}
+      </QueryClientProvider>
       </BrowserRouter>
     </Provider>
   </React.StrictMode>

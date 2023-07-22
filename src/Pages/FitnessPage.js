@@ -7,6 +7,7 @@ import SearchBar from "../Components/SearchBar";
 import React, { useEffect, useState } from 'react';
 import { useGetUserFollowingQuery} from "../features/auth/usersApiSlice";
 import { baseQueryWithReauth } from "../app/api/apiSlice"
+import { useQuery } from "@tanstack/react-query"
 import { store } from "../app/store"
 import '../CSS/pages/fitnessPage.css'
 export default function FitnessPage() {
@@ -45,68 +46,124 @@ export default function FitnessPage() {
     setSelectedUsername(users[0].username)
     }
   },[users])
-
-  async function getSelectedQuery() {
-    try {
-      const response = await baseQueryWithReauth(`users/${selectedUsername}/exercises?query=${selectedQuery}`,baseQueryOptions, {});
-      setExercises(response.data ? response.data : []); // handle case where no query was selected by returning []
-    } catch (error) {
-      console.error(error);
-    } finally {
-    }
-  }
-
-  async function getAnyWorkout() {
-    try {
-      const response = await baseQueryWithReauth(`users/${selectedUsername}/get-any-workout?skip=${workoutOffset}`,
-        baseQueryOptions,{})
-      setDisplayedWorkouts([...displayedWorkouts, ...response.data])
-      setWorkoutOffset(prevOffset => prevOffset + 10);
-    } catch (error) {
-      console.error(error)
-    }
-  }
-
-  // useEffect to handle loading new workouts when selectedUser is changed
-  useEffect(() => {
-    const resetVariablesAsync = async () => {
-      // reset workout offset whenever a new user is selected
-      // set current Displayed workouts to []
-      try {
-        setExercises([])
-        setWorkoutProgressData(null)
-        setDisplayedProgressData(null)
-        setWorkoutSearched('')
-        setDisplayedWorkouts([])
-        setWorkoutOffset(0)
-        const weeklyWorkoutDurations = await baseQueryWithReauth(`users/${selectedUsername}/workout-durations`,baseQueryOptions,{});
-        // fetches data to be display in workout duration graph
-        setWorkoutDurationData(weeklyWorkoutDurations.data)
-      } catch (error) { console.error(error) }
-    }
-    resetVariablesAsync();
-  }, [selectedUsername])
-
-  // fetch first batch of 10 workouts once state variables have been reset
-  useEffect(() => {
-    if (displayedWorkouts.length === 0 && workoutOffset === 0) {
-      getAnyWorkout();
-    }
-  }, [displayedWorkouts])
   
+  const { data: queryResults } = useQuery(
+    // Use selectedQuery and selectedUsername as the query key
+    ['selectedQueryResults', selectedQuery, selectedUsername],
+    // Define the query function, which will be called when data is not in cache or refetch is requested
+    async () => {
+      if (selectedQuery !== ''){
+        try {
+          const response = await baseQueryWithReauth(
+            `users/${selectedUsername}/exercises?query=${selectedQuery}`,
+            baseQueryOptions,
+            {}
+          );
+          return response.data ? response.data : [];
+        } catch (error) {
+          console.error(error);
+          return [];
+        }
+      }
+      return []
+    }
+  );
+
+  // Whenever queryResults changes (data is fetched or updated), update the exercises state
+  useEffect(() => {
+    if (queryResults) {
+      setExercises(queryResults);
+    }
+  }, [queryResults]);
+  
+
+  async function getUserDurationData(){
+    if (selectedUsername !== ''){
+    const weeklyWorkoutDurations = await baseQueryWithReauth(
+      `users/${selectedUsername}/workout-durations`,
+      baseQueryOptions,
+      {}
+    );
+    return weeklyWorkoutDurations.data;
+    } else {
+      return []
+    }
+  }
+  // cache workout duration data
+  const {data: weeklyWorkoutDurations } = useQuery({
+    queryKey: ['userDurationData', selectedUsername],
+    queryFn: getUserDurationData
+  })
+  
+  // user workouts
+  async function getAnyWorkout() {
+    if (selectedUsername !== ''){
+    const response = await baseQueryWithReauth(
+      `users/${selectedUsername}/get-any-workout?skip=${workoutOffset}`,
+      baseQueryOptions,
+      {}
+    );
+    return response.data;
+    } else {
+      return []
+    }
+  }
+
+  // caching user workouts
+  const {data: userWorkouts} = useQuery({
+    queryKey: ["userWorkouts", selectedUsername, workoutOffset], // setting a unique key for each user and batch of workouts (offset)
+    queryFn: getAnyWorkout,
+  })
+
+  useEffect(() => {
+    // Update user dependent variables when new user is selected
+    // load cached workout duration data
+    const resetVariablesAsync = async () => {
+      try {
+        setExercises([]);
+        setWorkoutProgressData(null);
+        setDisplayedProgressData(null);
+        setWorkoutSearched('');
+        setWorkoutOffset(0);
+        setSelectedQuery('')
+        //setDisplayedWorkouts([])
+        // Use the data fetched by useQuery
+        if (weeklyWorkoutDurations) {
+          setWorkoutDurationData(weeklyWorkoutDurations);
+        }
+      } catch (error) {
+        console.error(error);
+      }
+    };
+    resetVariablesAsync();
+  }, [selectedUsername, weeklyWorkoutDurations]);
+
+  // Update the displayed workouts
+  useEffect(() => {
+    if (userWorkouts && userWorkouts.length > 0){
+      if (workoutOffset === 0){ // This ensures displayed data resets when a new user is selected
+        setDisplayedWorkouts(userWorkouts)
+      } else {
+        setDisplayedWorkouts([...displayedWorkouts, ...userWorkouts])
+      }
+  }
+  }, [userWorkouts])
+
+  // displays the data for the number of weeks that the user selected
   function filterDataByWeeks(data, numberOfWeeks) {
     const currentDate = new Date();
     const filteredData = [];
-  
-    for (let i = data.length - 1; i >= 0; i--) {
-      const dataItem = data[i];
-      const itemDate = new Date(dataItem.weekEndDate);
-      const diffInWeeks = Math.ceil((currentDate - itemDate) / (7 * 24 * 60 * 60 * 1000));
-  
-      if (diffInWeeks <= numberOfWeeks) {
-        filteredData.unshift(dataItem);
-      } else {
-        break;
+    if (data){
+      for (let i = data.length - 1; i >= 0; i--) {
+        const dataItem = data[i];
+        const itemDate = new Date(dataItem.weekEndDate);
+        const diffInWeeks = Math.ceil((currentDate - itemDate) / (7 * 24 * 60 * 60 * 1000));
+    
+        if (diffInWeeks <= numberOfWeeks) {
+          filteredData.unshift(dataItem);
+        } else {
+          break;
+        }
       }
     }
   
@@ -116,7 +173,7 @@ export default function FitnessPage() {
     if (workoutSearched){
       setDisplayedProgressData(filterDataByWeeks(workoutProgressData, numProgressWeeks*4))
     }
-  },[numProgressWeeks])
+  },[numProgressWeeks, workoutProgressData, workoutSearched])
 
   return (
     <>
@@ -129,12 +186,14 @@ export default function FitnessPage() {
       {/*idea: develop searchBar and jumpto feature for displayed workouts so user can find specific workout and go to its location in displayed list*/}
       <div className='columnContainer'>
         <div className="column">
-          {displayedWorkouts.length > 0 ? (
+          {(displayedWorkouts.length > 0) ? (
             <div className='workoutsContainer'>
               {displayedWorkouts.map((workout) => {
                 return <WorkoutBox key={workout.id} workout={workout} />
               })}
-              <button className='view-more-button' onClick={getAnyWorkout}>{!selectedUsername ? 'Select User to Display Workouts' : 'View 10 More'}</button>
+              <button className='view-more-button' onClick={() => {setWorkoutOffset((prevOffset) => prevOffset + 10);}}>
+                {!selectedUsername ? 'Select User to Display Workouts' : 'View 10 More'}
+              </button>
             </div>
           ) : (<p>Select a User to Display Workouts</p>)}
         </div>
@@ -142,12 +201,11 @@ export default function FitnessPage() {
           <UserDropdown options={queries} selectedOption={selectedQuery} setSelectedOption={setSelectedQuery}
             defaultText={"Click here to choose a Query"}
           />
-          <button style={{borderRadius:'5px', backgroundColor: '#4caf50', border:'none', color: 'white'}} onClick={getSelectedQuery}>Get Results</button>
           <ExerciseList exercises={exercises}/>
           <div className="sticky-bottom">
             <div style={{width:'100%', display:'flex'}}>
               <SearchBar setDataStore={setWorkoutProgressData} search={workoutSearched} setSearch={setWorkoutSearched} timeFrame={numProgressWeeks}
-                          setData={setDisplayedProgressData} handleSearch={ async (exercise, username = selectedUsername, timeFrame=numProgressWeeks) =>{
+                          setData={setDisplayedProgressData} selectedUsername={selectedUsername} handleSearch={ async (exercise, username = selectedUsername, timeFrame=numProgressWeeks) =>{
                               const progressRequest = await baseQueryWithReauth(`/users/${username}/${exercise}?query=weightProgress&months=${12}`,baseQueryOptions,{});
                               //const progress = await progressRequest.json();
                               return progressRequest.data
